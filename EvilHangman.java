@@ -7,7 +7,7 @@ import java.nio.file.Path;
 
 public class EvilHangman {
     public static String correctGuesses;
-    public static String incorrectGuesses;
+    public static String incorrectGuesses = "";
     public static String validGuess = "abcdefghijklmnopqrstuvwxyz";
     public static ArrayList<String> words = new ArrayList<>();
     public static String hiddenWord;
@@ -28,10 +28,11 @@ public class EvilHangman {
         return words;
     }
 
-    static boolean takeGuess (String guess) {
+    static int takeGuess (String guess) {
         ArrayList<String> longest = new ArrayList<>();
         ArrayList<String> n = new ArrayList<>();
         ArrayList<String> noGuess = new ArrayList<>();
+        int index = 0;
 
         for (String x : words){
             if (x.charAt(0) == guess.charAt(0)){
@@ -46,6 +47,7 @@ public class EvilHangman {
             }
             if (n.size() > longest.size()){
                 longest = n;
+                index = i;
             }
         }
         
@@ -56,29 +58,51 @@ public class EvilHangman {
         }
         if (longest.size() > noGuess.size()){
             words = longest;
-            return true;
+            return index;
         }
         words = noGuess;
-        return false;
+        return -1;
     }
 
-    static ArrayList<String> round (ArrayList<String> words) {
+    static ArrayList<String> round (ArrayList<String> word_list) {
         Scanner scanner = new Scanner(System.in);
         String guess;
 
         System.out.println("You have " + numGuesses + " guesses remaining. ");
         System.out.println("Incorrect guesses: " + incorrectGuesses);
         System.out.println(hiddenWord);
+        System.out.println(word_list);
 
         System.out.println("Guess a letter. ");
         guess = scanner.nextLine().toLowerCase();
-        if(guess.length() != 1 || !validGuess.contains(guess) || incorrectGuesses.contains(guess) || hiddenWord.contains(guess)){
+        if(guess.length() != 1 || !validGuess.contains(guess) || hiddenWord.contains(guess)){
             System.out.println("Invalid guess. ");
-            return round(words);
+            return round(word_list);
         }
+        int index = takeGuess(guess);
+        if (index == -1){
+            incorrectGuesses = incorrectGuesses + guess;
+            System.out.println("Incorrect guess. ");
+            return words;
+        }
+        hiddenWord = revealLetter(index, guess);
+        System.out.println(hiddenWord);
+        System.out.println("Correct guess!");
 
+        return word_list;
+    }
 
-        return words;
+    static String revealLetter (int index, String guess){
+        String word = "";
+        for (int i = 0; i < wordLength; i++){
+            if (i == index){
+                word = word.concat(guess);
+            }
+            else {
+                word = word.concat("-");
+            }
+        }
+        return word;
     }
 
     public static void main(String[] args) throws IOException {
@@ -90,5 +114,14 @@ public class EvilHangman {
         hiddenWord = "----";
         
         System.out.println("Get ready. The word is 4 letters long. ");
+
+        while (numGuesses > 0){
+            round(words);
+            numGuesses--;
+            if (!hiddenWord.contains("-")){
+                System.out.println("Congratulations! You won!");
+                break;
+            }
+        }
     }
 }
