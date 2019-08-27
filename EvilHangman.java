@@ -126,5 +126,8 @@ public class EvilHangman {
                 break;
             }
         }
+        if (numGuesses <= 0){
+            System.out.println("You lost. ");
+        }
     }
 }
