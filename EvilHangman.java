@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.nio.file.Path;
+import java.util.Random;
 
 public class EvilHangman {
     public static String correctGuesses;
@@ -11,7 +12,7 @@ public class EvilHangman {
     public static String validGuess = "abcdefghijklmnopqrstuvwxyz";
     public static ArrayList<String> words = new ArrayList<>();
     public static String hiddenWord;
-    public static int numGuesses = 26;
+    public static int numGuesses = 8;
     public static int wordLength = 4;
 
 
@@ -35,13 +36,13 @@ public class EvilHangman {
         int index = 0;
 
         for (String x : words){
-            if (x.charAt(0) == guess.charAt(0)){
+            if (x.charAt(0) == guess.charAt(0) && wordContainsIncorrectGuess(x)){
                 longest.add(x);
             }
         }
         for (int i = 1; i<wordLength; i++){
             for (String x : words){
-                if (x.charAt(i) == guess.charAt(0)){
+                if (x.charAt(i) == guess.charAt(0) && wordContainsIncorrectGuess(x)){
                     n.add(x);
                 }
             }
@@ -52,7 +53,7 @@ public class EvilHangman {
         }
         
         for (String x : words){
-            if (!x.contains(guess)){
+            if (!x.contains(guess) && wordContainsIncorrectGuess(x)){
                 noGuess.add(x);
             }
         }
@@ -106,6 +107,15 @@ public class EvilHangman {
         return word;
     }
 
+    static boolean wordContainsIncorrectGuess(String word){
+        for (int i = 0; i < word.length(); i++){
+            if (incorrectGuesses.contains(Character.toString(word.charAt(i)))){
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
         
@@ -135,7 +145,11 @@ public class EvilHangman {
             }
         }
         if (numGuesses <= 0){
+            Random rand = new Random();
+            int r = rand.nextInt(words.size() - 1);
+            String correctWord = words.get(r);
             System.out.println("You lost. ");
+            System.out.println("The correct word was " + correctWord);
         }
     }
 }
