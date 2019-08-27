@@ -75,7 +75,7 @@ public class EvilHangman {
 
         System.out.println("Guess a letter. ");
         guess = scanner.nextLine().toLowerCase();
-        if(guess.length() != 1 || !validGuess.contains(guess) || hiddenWord.contains(guess)){
+        if(guess.length() != 1 || !validGuess.contains(guess) || incorrectGuesses.contains(guess) || hiddenWord.contains(guess)){
             System.out.println("Invalid guess. ");
             return round(word_list);
         }
