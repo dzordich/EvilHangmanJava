@@ -98,6 +98,9 @@ public class EvilHangman {
             if (i == index){
                 word = word.concat(guess);
             }
+            else if (hiddenWord.charAt(i) != "-".charAt(0)){
+                word = word.concat(Character.toString(hiddenWord.charAt(i)));
+            }
             else {
                 word = word.concat("-");
             }
