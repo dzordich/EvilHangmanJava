@@ -70,22 +70,28 @@ public class EvilHangman {
         String guess;
 
         System.out.println("You have " + numGuesses + " guesses remaining. ");
-        System.out.println("Incorrect guesses: " + incorrectGuesses);
+        System.out.println(" ");
+        if (incorrectGuesses.length() > 0){
+            System.out.println("Incorrect guesses: " + incorrectGuesses);
+        }
         System.out.println(hiddenWord);
 
         System.out.println("Guess a letter. ");
         guess = scanner.nextLine().toLowerCase();
         if(guess.length() != 1 || !validGuess.contains(guess) || incorrectGuesses.contains(guess) || hiddenWord.contains(guess)){
+            System.out.println(" ");
             System.out.println("Invalid guess. ");
             return round(word_list);
         }
         int index = takeGuess(guess);
         if (index == -1){
             incorrectGuesses = incorrectGuesses + guess;
+            System.out.println(" ");
             System.out.println("Incorrect guess. ");
             return words;
         }
         hiddenWord = revealLetter(index, guess);
+        System.out.println(" ");
         System.out.println("Correct guess!");
 
         return word_list;
@@ -124,7 +130,7 @@ public class EvilHangman {
         if (diff == 1){
             wordLength = 4;
         }
-        else if (diff == 3){
+        else if (diff == 2){
             wordLength = 6;
         }
         else {
@@ -132,7 +138,10 @@ public class EvilHangman {
         }
 
         words = readFile(wordLength);
-        hiddenWord = "----";
+        hiddenWord = "";
+        for (int i = 0; i < wordLength; i++){
+            hiddenWord = hiddenWord + "-";
+        }
         
         System.out.println("Get ready. The word is 4 letters long. ");
 
