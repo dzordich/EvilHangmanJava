@@ -17,7 +17,7 @@ public class EvilHangman {
 
 
     static ArrayList<String> readFile (int length) throws IOException{
-        Path path = Paths.get("test_words2.txt");
+        Path path = Paths.get("words.txt");
         Scanner scanner = new Scanner(path);
         ArrayList<String> words = new ArrayList<>();
         while(scanner.hasNextLine()){
@@ -78,7 +78,6 @@ public class EvilHangman {
                 longestLeftovers = n;
             }
         }
-        System.out.println(longestLeftovers);
 
         if (longest.size() > noGuess.size()){
             words = longest;
@@ -111,13 +110,11 @@ public class EvilHangman {
             return round(word_list);
         }
         int index = takeGuess(guess);
-        // System.out.println(words);
 
         if (index == -1){
             incorrectGuesses = incorrectGuesses + guess;
             System.out.println(" ");
             System.out.println("Incorrect guess. ");
-            System.out.println(words);
             return words;
         }
         if (index == -2){
@@ -129,7 +126,6 @@ public class EvilHangman {
         hiddenWord = revealLetter(index, guess);
         System.out.println(" ");
         System.out.println("Correct guess!");
-        System.out.println(words);
 
         return words;
     }
@@ -238,7 +234,6 @@ public class EvilHangman {
 
         while (numGuesses > 0){
             round(words);
-            System.out.println(words.size());
             numGuesses--;
             if (!hiddenWord.contains("-")){
                 System.out.println("Congratulations! You won!");
