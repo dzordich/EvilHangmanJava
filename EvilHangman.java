@@ -31,7 +31,6 @@ public class EvilHangman {
 
     static int takeGuess (String guess) {
         ArrayList<String> longest = new ArrayList<>();
-        ArrayList<String> n = new ArrayList<>();
         ArrayList<String> noGuess = new ArrayList<>();
         int index = 0;
 
@@ -41,6 +40,7 @@ public class EvilHangman {
             }
         }
         for (int i = 1; i<wordLength; i++){
+            ArrayList<String> n = new ArrayList<>();
             for (String x : words){
                 if (x.charAt(i) == guess.charAt(0) && wordContainsIncorrectGuess(x)){
                     n.add(x);
@@ -84,6 +84,8 @@ public class EvilHangman {
             return round(word_list);
         }
         int index = takeGuess(guess);
+        System.out.println(words);
+
         if (index == -1){
             incorrectGuesses = incorrectGuesses + guess;
             System.out.println(" ");
@@ -93,6 +95,7 @@ public class EvilHangman {
         hiddenWord = revealLetter(index, guess);
         System.out.println(" ");
         System.out.println("Correct guess!");
+        System.out.println(words);
 
         return word_list;
     }
