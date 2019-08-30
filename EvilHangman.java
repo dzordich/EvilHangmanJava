@@ -17,7 +17,7 @@ public class EvilHangman {
 
 
     static ArrayList<String> readFile (int length) throws IOException{
-        Path path = Paths.get("words.txt");
+        Path path = Paths.get("test_words2.txt");
         Scanner scanner = new Scanner(path);
         ArrayList<String> words = new ArrayList<>();
         while(scanner.hasNextLine()){
@@ -33,6 +33,7 @@ public class EvilHangman {
         ArrayList<String> longest = new ArrayList<>();
         ArrayList<String> noGuess = new ArrayList<>();
         ArrayList<String> leftovers = new ArrayList<>();
+        ArrayList<String> longestLeftovers = new ArrayList<>();
 
         int index = 0;
 
@@ -69,9 +70,23 @@ public class EvilHangman {
                 noGuess.add(x);
             }
         }
+        leftovers = removeDupes(leftovers);
+        for (String x : leftovers){
+            ArrayList<String> n = new ArrayList<>();
+            n = sortLeftovers(leftovers, x, guess);
+            if (n.size() > longestLeftovers.size()){
+                longestLeftovers = n;
+            }
+        }
+        System.out.println(longestLeftovers);
+
         if (longest.size() > noGuess.size()){
             words = longest;
             return index;
+        }
+        if (longestLeftovers.size() > noGuess.size()){
+            words = longestLeftovers;
+            return -2;
         }
         words = noGuess;
         return -1;
@@ -102,6 +117,13 @@ public class EvilHangman {
             incorrectGuesses = incorrectGuesses + guess;
             System.out.println(" ");
             System.out.println("Incorrect guess. ");
+            System.out.println(words);
+            return words;
+        }
+        if (index == -2){
+            hiddenWord = revealMultipleLetters(guess);
+            System.out.println(" ");
+            System.out.println("Correct guess!");
             return words;
         }
         hiddenWord = revealLetter(index, guess);
@@ -116,6 +138,21 @@ public class EvilHangman {
         String word = "";
         for (int i = 0; i < wordLength; i++){
             if (i == index){
+                word = word.concat(guess);
+            }
+            else if (hiddenWord.charAt(i) != "-".charAt(0)){
+                word = word.concat(Character.toString(hiddenWord.charAt(i)));
+            }
+            else {
+                word = word.concat("-");
+            }
+        }
+        return word;
+    }
+    static String revealMultipleLetters (String guess){
+        String word = "";
+        for (int i = 0; i < wordLength; i++){
+            if (words.get(0).charAt(i) == guess.charAt(0)){
                 word = word.concat(guess);
             }
             else if (hiddenWord.charAt(i) != "-".charAt(0)){
@@ -146,6 +183,34 @@ public class EvilHangman {
         }
 
         return i;
+    }
+    static ArrayList<String> sortLeftovers(ArrayList<String> leftovers, String word, String guess){
+        ArrayList<String> same = new ArrayList<>();
+
+        for (String x : leftovers) {
+            if (listOfIndexes(guess, word).equals(listOfIndexes(guess, x))){
+                same.add(x);
+            }
+        }
+        return same;
+    }
+    static ArrayList<Integer> listOfIndexes (String guess, String word){
+        ArrayList<Integer> indexes = new ArrayList<>();
+        for (int i = 0; i < word.length(); i++){
+            if (word.charAt(i) == guess.charAt(0)){
+                indexes.add(i);
+            }
+        }
+        return indexes;
+    }
+    static ArrayList<String> removeDupes (ArrayList<String> og){
+        ArrayList<String> noDupes = new ArrayList<>();
+        for (String x : og){
+            if (!noDupes.contains(x)){
+                noDupes.add(x);
+            }
+        }
+        return noDupes;
     }
 
     public static void main(String[] args) throws IOException {
