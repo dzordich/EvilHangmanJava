@@ -32,18 +32,30 @@ public class EvilHangman {
     static int takeGuess (String guess) {
         ArrayList<String> longest = new ArrayList<>();
         ArrayList<String> noGuess = new ArrayList<>();
+        ArrayList<String> leftovers = new ArrayList<>();
+
         int index = 0;
 
         for (String x : words){
             if (x.charAt(0) == guess.charAt(0) && wordContainsIncorrectGuess(x)){
-                longest.add(x);
+                if(indexesOfGuess(guess, x) == 1){
+                    longest.add(x);
+                }
+                else {
+                    leftovers.add(x);
+                }
             }
         }
         for (int i = 1; i<wordLength; i++){
             ArrayList<String> n = new ArrayList<>();
             for (String x : words){
                 if (x.charAt(i) == guess.charAt(0) && wordContainsIncorrectGuess(x)){
-                    n.add(x);
+                    if(indexesOfGuess(guess, x) == 1){
+                        n.add(x);
+                    }
+                    else {
+                        leftovers.add(x);
+                    }
                 }
             }
             if (n.size() > longest.size()){
@@ -84,7 +96,7 @@ public class EvilHangman {
             return round(word_list);
         }
         int index = takeGuess(guess);
-        System.out.println(words);
+        // System.out.println(words);
 
         if (index == -1){
             incorrectGuesses = incorrectGuesses + guess;
@@ -97,7 +109,7 @@ public class EvilHangman {
         System.out.println("Correct guess!");
         System.out.println(words);
 
-        return word_list;
+        return words;
     }
 
     static String revealLetter (int index, String guess){
@@ -123,6 +135,17 @@ public class EvilHangman {
             }
         }
         return true;
+    }
+    static int indexesOfGuess(String guess, String word){
+        int i = 0;
+
+        for (int x = 0; x < word.length(); x++){
+            if (word.charAt(x) == guess.charAt(0)){
+                i++;
+            }
+        }
+
+        return i;
     }
 
     public static void main(String[] args) throws IOException {
@@ -150,6 +173,7 @@ public class EvilHangman {
 
         while (numGuesses > 0){
             round(words);
+            System.out.println(words.size());
             numGuesses--;
             if (!hiddenWord.contains("-")){
                 System.out.println("Congratulations! You won!");
